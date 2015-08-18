@@ -1,0 +1,36 @@
+Options +Indexes 
+# or #
+IndexIgnore *
+
+<FilesMatch "\.(jpg|jpeg|png|js|css|ico|gif)$">
+	Header set Cache-Control "max-age=2592000, public"
+</FilesMatch>
+
+Options +FollowSymLinks
+#RewriteBase /discoverSep
+RewriteRule ^sitemap\.xml$ sitemap\.php [L]
+<ifModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 seconds"
+  ExpiresByType text/html "access 1 day"
+  ExpiresByType image/gif "access 1 day"
+  ExpiresByType image/jpeg "access 1 day"
+  ExpiresByType image/png "access 1 day"
+  ExpiresByType text/css "access 1 day"
+  ExpiresByType text/javascript "access 1 day"
+  ExpiresByType application/x-javascript "access 1 day"
+</ifModule>
+
+####################
+# GZIP COMPRESSION #
+####################
+SetOutputFilter DEFLATE
+AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/x-javascript application/x-httpd-php
+BrowserMatch ^Mozilla/4 gzip-only-text/html
+BrowserMatch ^Mozilla/4\.0[678] no-gzip
+BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip
+Header append Vary User-Agent env=!dont-vary
+
+#ErrorDocument 404 http://www.discovernica.com/404/
